@@ -13,7 +13,7 @@ export const mastra = new Mastra({
     url: ":memory:",
   }),
   logger: new PinoLogger({
-    name: 'Mastra',
+    name: 'pod021-agent',
     level: 'info',
   }),
 });
