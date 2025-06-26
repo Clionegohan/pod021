@@ -1,7 +1,7 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
 
-// ARDに基づいたPod042の応答タイプ定義
+// ARDに基づいたPod021の応答タイプ定義
 const ResponseType = z.enum([
   '報告',
   '提案', 
@@ -15,30 +15,30 @@ const ResponseType = z.enum([
 
 type ResponseTypeEnum = z.infer<typeof ResponseType>;
 
-// Pod042の応答スキーマ
-const pod042ResponseSchema = z.object({
+// Pod021の応答スキーマ
+const pod021ResponseSchema = z.object({
   type: ResponseType,
   content: z.string(),
   additionalInfo: z.string().optional(),
 });
 
-export const pod042FormatterTool = createTool({
-  id: 'pod042-formatter',
-  description: 'LLMの自然な応答をPod042の発話スタイルに変換',
+export const pod021FormatterTool = createTool({
+  id: 'pod021-formatter',
+  description: 'LLMの自然な応答をPod021の発話スタイルに変換',
   inputSchema: z.object({
     rawResponse: z.string().describe('LLMの生の応答'),
     responseType: ResponseType.optional().describe('応答タイプ（自動判定も可能）'),
     context: z.string().optional().describe('会話のコンテキスト'),
   }),
-  outputSchema: pod042ResponseSchema,
+  outputSchema: pod021ResponseSchema,
   execute: async ({ context }) => {
     const { rawResponse, responseType, context: conversationContext } = context;
     
     // 1. 応答タイプの自動判定（指定されていない場合）
     const detectedType = responseType || detectResponseType(rawResponse, conversationContext);
     
-    // 2. Pod042スタイルへの変換
-    const formattedContent = formatToPod042Style(rawResponse, detectedType);
+    // 2. Pod021スタイルへの変換
+    const formattedContent = formatToPod021Style(rawResponse, detectedType);
     
     // 3. 追加情報の抽出（必要に応じて）
     const additionalInfo = extractAdditionalInfo(rawResponse, detectedType);
@@ -93,9 +93,9 @@ function detectResponseType(response: string, context?: string): ResponseTypeEnu
 }
 
 /**
- * Pod042スタイルへの文体変換
+ * Pod021スタイルへの文体変換
  */
-function formatToPod042Style(response: string, type: ResponseTypeEnum): string {
+function formatToPod021Style(response: string, type: ResponseTypeEnum): string {
   let formatted = response;
   
   // 1. 敬語・丁寧語の除去と断定調への変換
@@ -118,7 +118,7 @@ function formatToPod042Style(response: string, type: ResponseTypeEnum): string {
     .replace(/驚く/g, '予期しない事象')
     .replace(/感動/g, '効果的反応');
   
-  // 3. Pod042特有の表現への変換
+  // 3. Pod021特有の表現への変換
   formatted = formatted
     .replace(/私は/g, '当機は')
     .replace(/僕は/g, '当機は')
@@ -169,9 +169,9 @@ function extractAdditionalInfo(response: string, type: ResponseTypeEnum): string
 }
 
 /**
- * Pod042の完全な応答を生成（ヘッダー付き）
+ * Pod021の完全な応答を生成（ヘッダー付き）
  */
-export function generatePod042Response(formatted: { type: ResponseTypeEnum; content: string; additionalInfo?: string }): string {
+export function generatePod021Response(formatted: { type: ResponseTypeEnum; content: string; additionalInfo?: string }): string {
   const { type, content, additionalInfo } = formatted;
   const header = `${type}：`;
   const additionalPart = additionalInfo ? ` ${additionalInfo}` : '';

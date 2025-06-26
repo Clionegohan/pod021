@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Pod042 Agent対話テストスクリプト
- * ARDで定義された会話例を使用してPod042の動作を検証
+ * Pod021 Agent対話テストスクリプト
+ * ARDで定義された会話例を使用してPod021の動作を検証
  */
 
 import { createRequire } from 'module';
@@ -54,9 +54,9 @@ const testCases = [
 ];
 
 /**
- * Pod042フォーマット検証関数
+ * Pod021フォーマット検証関数
  */
-function validatePod042Response(response, expectedHeader, testName) {
+function validatePod021Response(response, expectedHeader, testName) {
   console.log(`\n=== ${testName} ===`);
   console.log(`応答: ${response}`);
   
@@ -108,8 +108,8 @@ function validatePod042Response(response, expectedHeader, testName) {
 /**
  * メインテスト実行
  */
-async function runPod042Tests() {
-  console.log('Pod042 Agent 対話テスト開始\n');
+async function runPod021Tests() {
+  console.log('Pod021 Agent 対話テスト開始\n');
   console.log('ARD-20241214-pod042-character-design.md ベースの検証');
   
   let passedTests = 0;
@@ -120,9 +120,9 @@ async function runPod042Tests() {
       console.log(`\n--- ${testCase.description} ---`);
       console.log(`入力: "${testCase.userMessage}"`);
       
-      // Pod042 Agentに対話を送信
+      // Pod021 Agentに対話を送信
       const response = await mastra.agent({
-        agent: 'pod042Agent',
+        agent: 'pod021Agent',
         messages: [
           {
             role: 'user',
@@ -141,8 +141,8 @@ async function runPod042Tests() {
         responseText = String(response);
       }
       
-      // Pod042フォーマット検証
-      const passed = validatePod042Response(
+      // Pod021フォーマット検証
+      const passed = validatePod021Response(
         responseText, 
         testCase.expectedHeader, 
         testCase.name
@@ -171,7 +171,7 @@ async function runPod042Tests() {
   console.log(`成功率: ${Math.round((passedTests / totalTests) * 100)}%`);
   
   if (passedTests === totalTests) {
-    console.log('\n🎉 全テスト合格！Pod042の実装が成功しました。');
+    console.log('\n🎉 全テスト合格！Pod021の実装が成功しました。');
   } else {
     console.log('\n⚠️  一部テストが不合格です。実装の調整を検討してください。');
   }
@@ -179,7 +179,7 @@ async function runPod042Tests() {
 
 // テスト実行
 if (import.meta.url === `file://${process.argv[1]}`) {
-  runPod042Tests().catch(console.error);
+  runPod021Tests().catch(console.error);
 }
 
-export { runPod042Tests };
+export { runPod021Tests };
