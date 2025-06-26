@@ -147,6 +147,12 @@ function formatToPod021Style(response: string, type: ResponseTypeEnum): string {
  * 追加情報の抽出（件数、時刻、詳細データなど）
  */
 function extractAdditionalInfo(response: string, type: ResponseTypeEnum): string | undefined {
+  // 確度情報の抽出
+  const certaintyMatch = response.match(/確度[:：]?\s*(\d+)%/);
+  if (certaintyMatch) {
+    return `【確度: ${certaintyMatch[1]}%】`;
+  }
+  
   // 件数情報の抽出
   const countMatch = response.match(/(\d+)件/);
   if (countMatch && (type === '承認' || type === '報告')) {
@@ -157,6 +163,12 @@ function extractAdditionalInfo(response: string, type: ResponseTypeEnum): string
   const timeMatch = response.match(/(\d{1,2}時\d{1,2}分)|(\d{1,2}:\d{2})/);
   if (timeMatch && type === '了解') {
     return `【${timeMatch[0]}に実行】`;
+  }
+  
+  // エラーコードの抽出
+  const errorMatch = response.match(/エラーコード[:：]?\s*([A-Z0-9]+)/);
+  if (errorMatch && type === '警告') {
+    return `【エラー: ${errorMatch[1]}】`;
   }
   
   // データ量の情報

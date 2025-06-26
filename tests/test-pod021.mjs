@@ -69,7 +69,7 @@ function validatePod021Response(response, expectedHeader, testName) {
   };
   
   // ヘッダー存在チェック
-  const headerPattern = /^(報告|提案|回答|承認|了解|分析|警告|確認)：/;
+  const headerPattern = /^(報告|提案|回答|承認|了解|分析|警告|確認|肯定|否定|要求|照会|補足)：/;
   validations.hasHeader = headerPattern.test(response);
   
   // 期待ヘッダーチェック
